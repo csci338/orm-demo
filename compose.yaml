@@ -21,6 +21,8 @@ services:
       - "1234:1234"
     volumes:
       - ./src/ui:/app
+      - /app/node_modules
+      - /app/.parcel-cache
     working_dir: /app
     healthcheck:
       test: "ls dist"
