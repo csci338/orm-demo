@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "lint": "html-validate *.html && stylelint **/*.css && eslint *.js",
+    "build": "npm install && parcel build index.html",
+    "watch": "npm install && parcel watch index.html",
+    "format": "prettier -w */**.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "eslint-plugin-react": "^7.33.2",
+    "html-validate": "^8.6.0",
+    "parcel": "^2.10.0",
+    "prettier": "^3.0.3",
+    "process": "^0.11.10",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

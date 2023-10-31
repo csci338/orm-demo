@@ -1,0 +1,50 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app
+    depends_on:
+      ui:
+       condition: service_healthy
+      db_setup:
+        condition: service_completed_successfully
+    entrypoint: > 
+      bash -c "poetry run python populate.py && poetry run uvicorn server:app --host 0.0.0.0 --reload"
+
+  ui:
+    image: node:lts
+    # user: "${UID}:${GID}"
+    ports:
+      - "1234:1234"
+    volumes:
+      - ./src/ui:/app
+    working_dir: /app
+    healthcheck:
+      test: "ls dist"
+      timeout: 90s
+      interval: 10s
+    entrypoint: npm run watch
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: "psql -U postgres -h localhost -p 5432"
+      timeout: 10s
+      interval: 10s
+
+  db_setup:
+    image: postgres:15
+    environment:
+      - PGPASSWORD=postgres
+    volumes:
+      - ./db:/script
+    depends_on:
+      db:
+        condition: service_healthy
+    working_dir: /script
+    entrypoint: "psql -U postgres -h db -p 5432 -f setup.sql"
